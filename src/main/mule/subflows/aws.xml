@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<sub-flow name="upload-s3-document" doc:id="1c73739a-1fce-4904-a117-461ebaca1d57" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="50c0abae-3a01-45b6-8e38-bc152f8c23c4" message='transactionId:#[vars.transactionId],correlationId:#[vars.correlationId],message:"Before document upload to s3 ",BucketName: #[vars.bucketName],KayPath:#[vars.keyPath]'/>
+		<s3:create-object doc:name="Upload Document To Amazon S3" doc:id="8fe5298d-61ae-4bdc-a6b3-95423b91ad66" config-ref="Amazon_S3_Config" bucketName="#[vars.bucketName]" key="#[vars.keyPath]"/>
+		<logger level="INFO" doc:name="End Logger" doc:id="0da8cdd6-7a0d-4734-bd93-a7add34858aa" message='transactionId:#[vars.transactionId],correlationId:#[vars.correlationId],message:"After document upload to s3 " payload:#[payload]'/>
+	</sub-flow>
+</mule>

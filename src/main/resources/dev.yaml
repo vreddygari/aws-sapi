@@ -1,0 +1,7 @@
+http:
+  port: "8081"
+  
+awss3:
+  accesskey: "![SVDEU9bNdfkIMVtKPkK0ZWc1hkiw/tyX]"
+  secretkey: "![kUG5l7taLv+45Km4h2aSdq/RnO7pe3iJb1/RpNn7by2YiUvC6Earz/WT5kTB7UgW]"
+  region: "ap-south-1"

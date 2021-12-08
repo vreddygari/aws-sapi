@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
+ <http:listener-config name="aws-sapi-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>  
+      
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="5426b1d5-3213-4f48-8ff4-480823aa4e51" file="dev.yaml" key="1234567890" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<s3:config name="Amazon_S3_Config" doc:name="Amazon S3 Configuration" doc:id="92653c60-ab58-476a-9b10-68e346ddf668" >
+		<s3:basic-connection accessKey="${secure::awss3.accesskey}" secretKey="${secure::awss3.secretkey}" region="${secure::awss3.region}" />
+	</s3:config>
+</mule>

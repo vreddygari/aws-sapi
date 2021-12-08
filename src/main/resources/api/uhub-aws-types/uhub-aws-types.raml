@@ -1,0 +1,49 @@
+#%RAML 1.0 Library
+usage: Types for uho aws sapi
+types:
+  upload-document-request-types:
+    type: object
+    properties:
+      bucketName:
+        type: string
+        required: true
+        example: "uho-covid-docs"
+      folderPath:
+        type: string
+        required: true
+        example: "identity"
+      fileName:
+        type: string
+        required: true
+        example: "35653.png"
+      document:
+        type: string
+        required: true
+        example: "iVBORw0KGgoAAAANSUhEUgAAAOIAAACRCAYAAADepmS4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjw"
+  upload-document-reponse-types:
+    type: object
+    properties:
+      code:
+        type: string
+        example: "200"
+        required: true
+      message:
+        type: string
+        example: "Success"
+        required: true
+      description:
+        type: string
+        example: "Document uploaded successfully"
+        required: true
+      dateTime:
+        type: datetime
+        example: "2021-07-29T05:58:02Z"
+        required: true
+      transactionId:
+        type: string
+        example: "44b32520-61ee-47b4-907d-fa15869f3c4d"
+        required: true
+          
+
+          
+  
