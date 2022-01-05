@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:tracing="http://www.mulesoft.org/schema/mule/tracing"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/tracing http://www.mulesoft.org/schema/mule/tracing/current/mule-tracing.xsd">
 	
 	<flow name="post:\document:application\json:aws-sapi-config">
-        <set-variable value="#[attributes.headers.'x-correlation-id' default &quot;&quot;]" doc:name="Set correlationId" doc:id="1f4e3c8d-4de6-4e05-b60b-a44070394ee1" variableName="correlationId"/>
+        <tracing:set-logging-variable doc:name="Set logging variable" doc:id="0f6d5710-b02d-4432-9e68-2200b2e6d1f5" variableName="awsid" value="awsid:#[uuid()]"/>
+		<set-variable value="#[attributes.headers.'x-correlation-id' default &quot;&quot;]" doc:name="Set correlationId" doc:id="1f4e3c8d-4de6-4e05-b60b-a44070394ee1" variableName="correlationId"/>
 		<logger level="INFO" doc:name="Start Log" doc:id="0561932e-fb12-41b1-820c-816f8d1d7883" message='transactionId:#[vars.transactionId],correlationId:#[vars.correlationId],message:"Started upload document to amazon s3 flow"'/>
 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Transform Encode to Deocde Base64  And set Input Payload">
             <ee:message>
@@ -19,7 +21,7 @@ output application/octet-stream
 fromBase64(payload.document)]]></ee:set-payload>
             </ee:message>
 			<ee:variables >
-				<ee:set-variable variableName="keyPath" ><![CDATA[payload.folderPath ++"/"++ now() as String {format:"yyyy-MM-dd 'T' HH:mm:ss'z'"} ++ "_"++ payload.fileName ]]></ee:set-variable>
+				<ee:set-variable variableName="keyPath" ><![CDATA[payload.folderPath as String ++"/"++ payload.fileName as String]]></ee:set-variable>
 				<ee:set-variable variableName="bucketName" ><![CDATA[payload.bucketName]]></ee:set-variable>
 			</ee:variables>
         
@@ -45,7 +47,7 @@ output application/json
 			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2f181b10-044e-4ef3-9f69-8fc6c6f6354d">
 				<set-variable value="#[500]" doc:name="Set http Status 500" doc:id="48f2adca-4604-43e8-b664-dafcca27c9f5" variableName="httpStatus"/>
 				<set-variable value="#[error.description]" doc:name="Set errorDescription" doc:id="62e9b446-d82b-4cc2-b292-84605aa8f0bd" variableName="errorDescription"/>
-				<set-variable value='#["Internal Server Error"]' doc:name="Set errorMessage" doc:id="d24d8b94-ba55-405c-933a-5ea3ac162ca0" variableName="errorMessage"/>
+				<set-variable value='Internal server error' doc:name="Set errorMessage" doc:id="d24d8b94-ba55-405c-933a-5ea3ac162ca0" variableName="errorMessage"/>
 				<flow-ref doc:name="global-prepare-error-response-sub-flow" doc:id="7bda7f1c-3825-42b8-a004-4f30583fe028" name="global-prepare-error-response-sub-flow"/>
 			</on-error-continue>
 		</error-handler>

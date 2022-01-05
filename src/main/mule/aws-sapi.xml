@@ -2,7 +2,7 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
     <apikit:config name="aws-sapi-config" api="aws-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="aws-sapi-main">
-        <http:listener config-ref="aws-sapi-httpListenerConfig" path="/covid/v1/*">
+        <http:listener config-ref="aws-sapi-httpListenerConfig" path="/v1/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
@@ -11,7 +11,7 @@
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
-        <set-variable value="#[attributes.headers.transactionId default uuid()]" doc:name="Set transactionId" doc:id="51df6a95-f1e6-4791-832a-320cfa82fe2b" variableName="transactionId" />
+        <set-variable value="#[attributes.headers.'x-transaction-id' default uuid()]" doc:name="Set transactionId" doc:id="51df6a95-f1e6-4791-832a-320cfa82fe2b" variableName="transactionId" />
         <apikit:router config-ref="aws-sapi-config" />
         <error-handler ref="global-error-handlerError" />
     </flow>
